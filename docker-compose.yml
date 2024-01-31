@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  terraform-utils:
+    image: hashicorp/terraform:1.0.0
+    env_file: .env
+    environment:
+      - AWS_SDK_LOAD_CONFIG=1
+    entrypoint: ""
+    volumes:
+      - .:/work
+      - ${AWS_DIR}:/root/.aws
+      - ~/.ssh:/root/.ssh
+    working_dir: /work
+
+  envvars:
+    image: flemay/envvars:0.0.7
+    env_file: .env
+    environment:
+      - AWS_SDK_LOAD_CONFIG=1
+    working_dir: /work
+    volumes:
+      - .:/work
+

@@ -1,16 +1,19 @@
-variable scale_out {
+variable scale_out_weekday {
     description = "scale out threshold"
     type        = object(
         {
-            cron         = string
-            threshold    = number
-            increment_by = number
+            peak_cron            = string
+            offpeak_cron         = string
+            peak_threshold       = number
+            offpeak_threshold    = number
+            peak_increment_by    = number
+            offpeak_increment_by = number
         }
     )
     
 }
 
-variable scale_out_off_peak {
+variable scale_out_weekend {
     description = "scale out threshold for weekend"
     type        = object(
         {

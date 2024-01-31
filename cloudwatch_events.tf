@@ -1,22 +1,32 @@
 locals {
     event_rules = [
         {
-            name        = "appstream_scale_out_off_peak"
-            description = "Scale up AppStream fleet when available capacity is below ${var.scale_out_off_peak.threshold}."
-            cron        = var.scale_out_off_peak.cron
+            name        = "appstream_scale_out_weekend"
+            description = "Scale up AppStream fleet when available capacity is below ${var.scale_out_weekend.threshold}."
+            cron        = var.scale_out_weekend.cron
             input       = <<JSON
             {
-                "state": "off_peak"
+                "state": "off_peak_weekend"
             }
             JSON
         },
         {
-            name        = "appstream_scale_out"
-            description = "Scale up AppStream fleet when available capacity is below ${var.scale_out.threshold}."
-            cron        = var.scale_out.cron
+            name        = "appstream_scale_out_weekday_peak"
+            description = "Scale up AppStream fleet when available capacity is below ${var.scale_out_weekday.peak_threshold}."
+            cron        = var.scale_out_weekday.peak_cron
             input       = <<JSON
             {
-                "state": "peak"
+                "state": "Weekday_Peak"
+            }
+            JSON
+        },
+        {
+            name        = "appstream_scale_out_weekday_off_peak"
+            description = "Scale up AppStream fleet when available capacity is above ${var.scale_out_weekday.offpeak_threshold}."
+            cron        = var.scale_out_weekday.offpeak_cron
+            input       = <<JSON
+            {
+                "state": "Weekday_Off_Peak"
             }
             JSON
         }

@@ -1,7 +1,7 @@
 locals {
     common_autoscaling_policy = {
-        max_capacity = var.minimum_capacity
-        min_capacity = var.maximum_capacity
+        max_capacity = var.maximum_capacity
+        min_capacity = var.minimum_capacity
         resource_id = "fleet/${var.fleet_name}"
         scalable_dimension = "appstream:fleet:DesiredCapacity"
         service_namespace = "appstream"
@@ -13,18 +13,26 @@ locals {
     autoscaling_up_policies = [
 
         {
-            name = "appstream_scale_out"
+            name = "appstream_scale_out_weekend"
             step_adjustment = {
                 metric_interval = 0.0
-                scaling_adjustment = var.scale_out.increment_by
+                scaling_adjustment = var.scale_out_weekend.increment_by
             }
             cooldown = 360
         },
         {
-            name = "appstream_scale_out_off_peak"
+            name = "appstream_scale_out_weekday_peak"
             step_adjustment = {
                 metric_interval = 0.0
-                scaling_adjustment = var.scale_out_off_peak.increment_by
+                scaling_adjustment = var.scale_out_weekday.peak_increment_by
+            }
+            cooldown = 360
+        },
+        {
+            name = "appstream_scale_out_weekday_off_peak"
+            step_adjustment = {
+                metric_interval = 0.0
+                scaling_adjustment = var.scale_out_weekday.offpeak_increment_by
             }
             cooldown = 360
         }

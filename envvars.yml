@@ -1,0 +1,17 @@
+envvars:
+  - name: TERRAFORM_WORKSPACE
+    desc: Terraform Workspace that will be deployed to
+    tags:
+      - terraform
+
+  - name: TERRAFORM_ROOT_MODULE
+    desc: Terraform Root Module (Directory) to deploy
+    tags:
+      - terraform
+      - terraform-init
+
+tags:
+  - name: terraform
+    desc: Required to run Terraform commands
+  - name: terraform-init
+    desc: Required to run Terraform init

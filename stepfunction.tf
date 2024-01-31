@@ -13,27 +13,33 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Choices": [
         {
           "Variable": "$.state",
-          "StringEquals": "peak",
-          "Next": "Disable_Off_Peak"
+          "StringEquals": "weekday_peak",
+          "Next": "DisableWeekend"
         },
         {
           "Variable": "$.state",
-          "StringEquals": "off_peak",
-          "Next": "Disable_Peak"
+          "StringEquals": "weekday_off_peak",
+          "Next": "DisableWeekdayPeak"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "off_peak_weekend",
+          "Next": "DisableWeekday"
         }
       ]
     },
-    "Disable_Off_Peak": {
+    "DisableWeekend": {
       "Type": "Task",
       "Parameters": {
         "AlarmNames": [
-          "${local.cloudwatch_alarms[1].alarm_name}"
+          "${local.cloudwatch_alarms[1].alarm_name}",
+          "${local.cloudwatch_alarms[2].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:disableAlarmActions",
-      "Next": "Enable_Peak"
+      "Next": "EnablePeakWeekday"
     },
-    "Enable_Peak": {
+    "EnablePeakWeekday": {
       "Type": "Task",
       "Parameters": {
         "AlarmNames": [
@@ -43,22 +49,44 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions",
       "End": true
     },
-    "Disable_Peak": {
+    "DisableWeekdayPeak": {
       "Type": "Task",
       "Parameters": {
         "AlarmNames": [
-          "${local.cloudwatch_alarms[0].alarm_name}"
+          "${local.cloudwatch_alarms[0].alarm_name}",
+          "${local.cloudwatch_alarms[2].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:disableAlarmActions",
-      "Next": "Enable_off_peak"
+      "Next": "EnableWeekdayOffPeak"
     },
-    "Enable_off_peak": {
+    "EnableWeekdayOffPeak": {
       "Type": "Task",
       "End": true,
       "Parameters": {
         "AlarmNames": [
           "${local.cloudwatch_alarms[1].alarm_name}"
+        ]
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions"
+    },
+    "DisableWeekday": {
+      "Type": "Task",
+      "Parameters": {
+        "AlarmNames": [
+          "${local.cloudwatch_alarms[0].alarm_name}",
+          "${local.cloudwatch_alarms[1].alarm_name}"
+        ]
+      },
+      "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions",
+      "Next": "EnableWeekend"
+    },
+    "EnableWeekend": {
+      "Type": "Task",
+      "End": true,
+      "Parameters": {
+        "AlarmNames": [
+          "${local.cloudwatch_alarms[2].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions"

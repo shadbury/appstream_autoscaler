@@ -13,18 +13,25 @@ locals {
 
   cloudwatch_alarms = [
     {
-      alarm_name          = "appstream_scale_out"
+      alarm_name          = "appstream_scale_out_weekday_peak"
       comparison_operator = "LessThanThreshold"
-      threshold           = var.scale_out.threshold
-      alarm_description   = "Scale up AppStream fleet when available capacity is below ${var.scale_out.threshold}."
-      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[0].arn]
+      threshold           = var.scale_out_weekday.peak_threshold
+      alarm_description   = "Scale up AppStream fleet when available capacity is below ${var.scale_out_weekday.peak_threshold}."
+      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[1].arn]
     },
     {
-      alarm_name          = "appstream_scale_out_off_peak"
+      alarm_name          = "appstream_scale_out_weekday_off_peak"
       comparison_operator = "LessThanThreshold"
-      threshold           = var.scale_out_off_peak.threshold
-      alarm_description   = "Scale up AppStream fleet when available capacity is below ${var.scale_out_off_peak.threshold}."
-      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[1].arn]
+      threshold           = var.scale_out_weekday.offpeak_threshold
+      alarm_description   = "Scale up AppStream fleet when available capacity is below ${var.scale_out_weekday.offpeak_threshold}."
+      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[2].arn]
+    },
+    {
+      alarm_name          = "appstream_scale_out_weekend"
+      comparison_operator = "LessThanThreshold"
+      threshold           = var.scale_out_weekend.threshold
+      alarm_description   = "Scale up AppStream fleet when available capacity is below ${var.scale_out_weekend.threshold}."
+      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[0].arn]
     },
     {
       alarm_name          = "appstream_scale_in"
