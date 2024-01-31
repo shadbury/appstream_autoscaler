@@ -16,8 +16,8 @@ locals {
         }
 
         scale_out_weekday = {
-            peak_cron            = "0 6 ? * MON-FRI *"
-            offpeak_cron         = "0 18 ? * MON-FRI *"
+            peak_cron            = "0 19 ? * SUN-THU *"
+            offpeak_cron         = "0 8 ? * MON-FRI *"
             peak_threshold       = 5
             peak_increment_by    = 2
             offpeak_threshold    = 2
@@ -25,7 +25,7 @@ locals {
         }
 
         scale_in_peak = {
-            threshold    = 5
+            threshold    = 6
             decrement_by = -1
         }
 

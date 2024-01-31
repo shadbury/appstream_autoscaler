@@ -5,7 +5,7 @@ locals {
     metric_name         = "AvailableCapacity"
     namespace           = "AWS/AppStream"
     statistic           = "Maximum"
-    period              = 30
+    period              = 300
     dimensions = {
       Fleet = var.fleet_name
     }
@@ -37,14 +37,14 @@ locals {
       alarm_name          = "appstream_scale_in_peak"
       comparison_operator = "GreaterThanThreshold"
       threshold           = var.scale_in_peak.threshold
-      alarm_description   = "Scale up AppStream fleet when available capacity is above ${var.scale_in_peak.threshold}."
+      alarm_description   = "Scale down AppStream fleet when available capacity is above ${var.scale_in_peak.threshold}."
       alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_down[0].arn]
     },
     {
       alarm_name          = "appstream_scale_in_off_peak"
       comparison_operator = "GreaterThanThreshold"
       threshold           = var.scale_in_offpeak.threshold
-      alarm_description   = "Scale up AppStream fleet when available capacity is above ${var.scale_in_offpeak.threshold}."
+      alarm_description   = "Scale down AppStream fleet when available capacity is above ${var.scale_in_offpeak.threshold}."
       alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_down[1].arn]
     },
   ]
