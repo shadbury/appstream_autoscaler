@@ -6,7 +6,7 @@ locals {
         region            = "ap-southeast-2"
         fleet_name        = "test"
         minumum_capacity  = 1
-        maximum_capacity  = 1
+        maximum_capacity  = 10
 
 
         scale_out_weekend = {
