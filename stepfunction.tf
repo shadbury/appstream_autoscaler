@@ -13,17 +13,17 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Choices": [
         {
           "Variable": "$.state",
-          "StringEquals": "weekday_peak",
+          "StringEquals": "Weekday_Peak",
           "Next": "DisableWeekend"
         },
         {
           "Variable": "$.state",
-          "StringEquals": "weekday_off_peak",
+          "StringEquals": "Weekday_Off_Peak",
           "Next": "DisableWeekdayPeak"
         },
         {
           "Variable": "$.state",
-          "StringEquals": "off_peak_weekend",
+          "StringEquals": "Off_Peak_Weekend",
           "Next": "DisableWeekday"
         }
       ]
@@ -33,7 +33,8 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Parameters": {
         "AlarmNames": [
           "${local.cloudwatch_alarms[1].alarm_name}",
-          "${local.cloudwatch_alarms[2].alarm_name}"
+          "${local.cloudwatch_alarms[2].alarm_name}",
+          "${local.cloudwatch_alarms[4].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:disableAlarmActions",
@@ -43,7 +44,8 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Type": "Task",
       "Parameters": {
         "AlarmNames": [
-          "${local.cloudwatch_alarms[0].alarm_name}"
+          "${local.cloudwatch_alarms[0].alarm_name}",
+          "${local.cloudwatch_alarms[3].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions",
@@ -54,7 +56,8 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Parameters": {
         "AlarmNames": [
           "${local.cloudwatch_alarms[0].alarm_name}",
-          "${local.cloudwatch_alarms[2].alarm_name}"
+          "${local.cloudwatch_alarms[2].alarm_name}",
+          "${local.cloudwatch_alarms[3].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:disableAlarmActions",
@@ -65,7 +68,8 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "End": true,
       "Parameters": {
         "AlarmNames": [
-          "${local.cloudwatch_alarms[1].alarm_name}"
+          "${local.cloudwatch_alarms[1].alarm_name}",
+          "${local.cloudwatch_alarms[4].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions"
@@ -75,10 +79,11 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "Parameters": {
         "AlarmNames": [
           "${local.cloudwatch_alarms[0].alarm_name}",
-          "${local.cloudwatch_alarms[1].alarm_name}"
+          "${local.cloudwatch_alarms[1].alarm_name}",
+          "${local.cloudwatch_alarms[3].alarm_name}"
         ]
       },
-      "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions",
+      "Resource": "arn:aws:states:::aws-sdk:cloudwatch:disableAlarmActions",
       "Next": "EnableWeekend"
     },
     "EnableWeekend": {
@@ -86,7 +91,8 @@ resource "aws_sfn_state_machine" "appstream_autoscale_state_machine" {
       "End": true,
       "Parameters": {
         "AlarmNames": [
-          "${local.cloudwatch_alarms[2].alarm_name}"
+          "${local.cloudwatch_alarms[2].alarm_name}",
+          "${local.cloudwatch_alarms[4].alarm_name}"
         ]
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:enableAlarmActions"

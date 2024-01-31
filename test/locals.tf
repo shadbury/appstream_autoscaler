@@ -11,21 +11,26 @@ locals {
 
         scale_out_weekend = {
             cron         = "0 08 ? * FRI,SAT *"
-            threshold     = 5
-            increment_by  = 5
+            threshold     = 1
+            increment_by  = 1
         }
 
         scale_out_weekday = {
             peak_cron            = "0 6 ? * MON-FRI *"
-            offpeak_cron        = "0 18 ? * MON-FRI *"
-            peak_threshold       = 7
+            offpeak_cron         = "0 18 ? * MON-FRI *"
+            peak_threshold       = 5
             peak_increment_by    = 2
-            offpeak_threshold    = 3
+            offpeak_threshold    = 2
             offpeak_increment_by = 1
         }
 
-        scale_in = {
-            threshold    = 3
+        scale_in_peak = {
+            threshold    = 5
+            decrement_by = -1
+        }
+
+        scale_in_offpeak = {
+            threshold    = 1
             decrement_by = -1
         }
 

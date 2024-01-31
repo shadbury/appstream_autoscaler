@@ -6,7 +6,7 @@ locals {
             cron        = var.scale_out_weekend.cron
             input       = <<JSON
             {
-                "state": "off_peak_weekend"
+                "state": "Off_Peak_Weekend"
             }
             JSON
         },

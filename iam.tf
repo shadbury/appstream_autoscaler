@@ -46,11 +46,7 @@ resource "aws_iam_policy" "autoscaling_policy" {
             "cloudwatch:EnableAlarmActions"
           ],
           "Effect": "Allow",
-          "Resource": [
-              aws_cloudwatch_metric_alarm.scaling_alarm[0].arn, 
-              aws_cloudwatch_metric_alarm.scaling_alarm[1].arn, 
-              aws_cloudwatch_metric_alarm.scaling_alarm[2].arn
-            ]
+          "Resource": aws_cloudwatch_metric_alarm.scaling_alarm[*].arn
         }
     ],
       "Version": "2012-10-17"

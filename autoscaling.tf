@@ -40,10 +40,18 @@ locals {
 
     autoscaling_down_policies = [
         {
-            name = "appstream_scale_in"
+            name = "appstream_scale_in_peak"
             step_adjustment = {
                 metric_interval = 0.0
-                scaling_adjustment = var.scale_in.decrement_by
+                scaling_adjustment = var.scale_in_peak.decrement_by
+            }
+            cooldown = 360
+        },
+        {
+            name = "appstream_scale_in_off_peak"
+            step_adjustment = {
+                metric_interval = 0.0
+                scaling_adjustment = var.scale_in_offpeak.decrement_by
             }
             cooldown = 360
         }

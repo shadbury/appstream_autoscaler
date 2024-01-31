@@ -5,7 +5,7 @@ locals {
     metric_name         = "AvailableCapacity"
     namespace           = "AWS/AppStream"
     statistic           = "Maximum"
-    period              = 300
+    period              = 30
     dimensions = {
       Fleet = var.fleet_name
     }
@@ -34,11 +34,18 @@ locals {
       alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_up[0].arn]
     },
     {
-      alarm_name          = "appstream_scale_in"
+      alarm_name          = "appstream_scale_in_peak"
       comparison_operator = "GreaterThanThreshold"
-      threshold           = var.scale_in.threshold
-      alarm_description   = "Scale up AppStream fleet when available capacity is above ${var.scale_in.threshold}."
+      threshold           = var.scale_in_peak.threshold
+      alarm_description   = "Scale up AppStream fleet when available capacity is above ${var.scale_in_peak.threshold}."
       alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_down[0].arn]
+    },
+    {
+      alarm_name          = "appstream_scale_in_off_peak"
+      comparison_operator = "GreaterThanThreshold"
+      threshold           = var.scale_in_offpeak.threshold
+      alarm_description   = "Scale up AppStream fleet when available capacity is above ${var.scale_in_offpeak.threshold}."
+      alarm_actions       = [aws_appautoscaling_policy.appstream_scaling_policy_down[1].arn]
     },
   ]
 }
@@ -57,5 +64,5 @@ resource "aws_cloudwatch_metric_alarm" "scaling_alarm" {
   dimensions          = local.common_alarms.dimensions
   alarm_description   = local.cloudwatch_alarms[count.index].alarm_description
   alarm_actions       = local.cloudwatch_alarms[count.index].alarm_actions
-  actions_enabled     = local.cloudwatch_alarms[count.index].alarm_name == "appstream_scale_in" ? true : false
+  actions_enabled     = false
 }

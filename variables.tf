@@ -24,7 +24,18 @@ variable scale_out_weekend {
     )
 }
 
-variable scale_in {
+variable scale_in_peak {
+    description = "scale in threshold"
+    type        = object(
+        {
+            threshold    = number
+            decrement_by = number
+        }
+    )
+}
+
+
+variable scale_in_offpeak {
     description = "scale in threshold"
     type        = object(
         {
